@@ -1,0 +1,9 @@
+.message_menu {
+    background-color: #c7c7c7;
+
+    position: absolute;
+    top: 0px;
+    left: 105%;
+    width: 30%;
+    height: 100%;
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- <script src="{{ url_for('static', filename='jquery-3.6.1.js') }}"></script> -->
+  <link rel="stylesheet" href="{{url_for('static', filename='message.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='chat.css')}}">
+  <link rel="stylesheet" href="{{url_for('static', filename='message_menu.css')}}">
+</head>
+<body>
+  <form onsubmit="return false;">
+    <h3>Message:</h3>
+    <input type="line" id="message_line">
+    <button type="button" onclick="sendMessage()">Send</button>
+    <h3>Server:</h3>
+    <div id="server_input" class="message_bar"></div>
+  </form>
+  <div class="message_menu" id="message_menu">
+    <button onclick="messangeMenu()">X</button>
+    <p>This is menu</p>
+  </div>
+  <script src="{{ url_for('static', filename='info_window.js') }}"></script>
+  <script src="{{ url_for('static', filename='cookie.js') }}"></script>
+  <script src="{{url_for('static', filename='get_json.js')}}"></script>
+  <script async src="{{ url_for('static', filename='send_message.js') }}"></script>
+  <script src="{{ url_for('static', filename='keys.js') }}"></script>
+  <script src="{{ url_for('static', filename='message_menu.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+.message {
+    background-color: rgb(20, 83, 119);
+
+    width: 50%;
+    
+    border-color: black;
+    border-radius: 20px;
+
+    padding: 1px;
+
+    margin: 10px;
+
+    display: flex;
+}
+
+[is_owner] {
+    margin-left: auto;
+}
+
+[inline] {
+    display: inline;
+}
+
+.message_content {
+    width: 90%;
+
+    margin-right: auto;
+    margin-left: 10px;
+}
+
+.message_hr {
+    border: 1px solid #2b0670;
+    width: 80%;
+
+    margin-left: 0px;
+}
+
+.message_user_text {
+    color: #2b0670;
+
+    font-size: 20px;
+
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+.message_text {
+    font-size: 20px;
+
+    margin-top: 5px;
+
+    word-wrap: break-word;
+}
+
+.open_message_menu_button {
+    margin-left: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 3px;
+
+    border: none;
+    background: url("open_menu_image.png") no-repeat;
+    background-size: 40px 40px;
+    
+    width: 10%;
+    height: 40px;
+}
