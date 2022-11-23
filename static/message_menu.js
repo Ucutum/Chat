@@ -5,9 +5,12 @@ var menu_target_left = 105
 
 menu.style = "left: " + String(menu_left) + "%;"
 
-function messangeMenu() {
+function messangeMenu(message_id, user_ip) {
     if (menu_target_left == 105) {
         menu_target_left = 70
+        document.getElementById("message_menu_message").innerHTML = "Id: " + String(message_id)
+        document.getElementById("delete_message_button").setAttribute("onclick", "deleteMessage('{}')".replace("{}", message_id))
+        document.getElementById("ban_user_button").setAttribute("onclick", "banUser('{}')".replace("{}", user_ip))
     } else {
         menu_target_left = 105
     }

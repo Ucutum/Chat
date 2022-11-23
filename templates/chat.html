@@ -17,6 +17,9 @@
   <div class="message_menu" id="message_menu">
     <button onclick="messangeMenu()">X</button>
     <p>This is menu</p>
+    <p id="message_menu_message">message</p>
+    <button type="button" class="delete_message_button" id="delete_message_button" onclick="return false">Delete message</button>
+    <button type="button" class="ban_user_button" id="ban_user_button" onclick="return false">Ban user</button>
   </div>
   <script src="{{ url_for('static', filename='info_window.js') }}"></script>
   <script src="{{ url_for('static', filename='cookie.js') }}"></script>

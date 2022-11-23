@@ -22,7 +22,7 @@ const message_html = `<div {{ is_owner }} id="{{ MessageId }}" class="message">
     <hr class="message_hr">
     <p class="message_text">{{ Message }}</p>
 </div>
-<button type="button" inline class="open_message_menu_button" onclick="messangeMenu()"></button>
+<button type="button" inline class="open_message_menu_button" onclick="messangeMenu('{{ MessageId }}', '{{ UserIp }}')"></button>
 </div>`
 
 const admin_message_html = `<div {{ is_owner }} id="{{ MessageId }}" class="message">
@@ -34,7 +34,7 @@ const admin_message_html = `<div {{ is_owner }} id="{{ MessageId }}" class="mess
     <hr class="message_hr">
     <p class="message_text">{{ Message }}</p>
 </div>
-<button type="button" inline class="open_message_menu_button" onclick="messangeMenu()"></button>
+<button type="button" inline class="open_message_menu_button" onclick="messangeMenu('{{ MessageId }}', '{{ UserIp }}')"></button>
 </div>`
 
 function GetJSON(){
@@ -58,16 +58,17 @@ function GetJSON(){
                     
                     var new_message_div
 
-                    if (is_admin) {
-                        new_message_div = admin_message_html.replace("{{ UserIp }}",
-                        data_chat[i].ip).replace("{{ MessageId }}", data_chat[i].id)
-                    } else {
-                        new_message_div = message_html
-                    }
+                    // if (is_admin) {
+                    //     new_message_div = admin_message_html.replace("{{ UserIp }}",
+                    //     data_chat[i].ip).replace("{{ MessageId }}", data_chat[i].id)
+                    // } else {
+                    new_message_div = message_html
+                    // }
 
                     new_message_div = new_message_div.replace("{{ User }}",
                     data_chat[i].user).replace("{{ Message }}",
                     data_chat[i].message).replace("{{ MessageId }}",
+                    data_chat[i].id).replace("{{ MessageId }}",
                     data_chat[i].id).replace("{{ UserIp }}",
                     data_chat[i].ip)
                     

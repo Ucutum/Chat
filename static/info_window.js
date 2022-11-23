@@ -16,7 +16,7 @@ function deleteMessage(message_id) {
     xhr.send(data)
 }
 
-function bunUser(user_ip) {
+function banUser(user_ip) {
     var send_data = {ban_ip: user_ip}
 
     var data = JSON.stringify(send_data)

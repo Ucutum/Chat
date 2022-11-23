@@ -22,10 +22,30 @@
 }
 
 .message_content {
-    width: 90%;
+    width: 80%;
 
-    margin-right: auto;
+    margin-right: 10px;
     margin-left: 10px;
+}
+
+@media screen and (width < 400px) {
+    .message_content {
+        width: 50%;
+    }
+
+    .message {
+        width: 70%;
+    }
+}
+
+@media screen and (400px < width < 600px) {
+    .message_content {
+        width: 65%;
+    }
+
+    .message {
+        width: 60%;
+    }
 }
 
 .message_hr {
@@ -42,6 +62,8 @@
 
     margin-bottom: 0px;
     margin-top: 10px;
+
+    width: 90%;
 }
 
 .message_text {
@@ -50,6 +72,8 @@
     margin-top: 5px;
 
     word-wrap: break-word;
+
+    width: 100%;
 }
 
 .open_message_menu_button {
@@ -58,10 +82,12 @@
     margin-bottom: 10px;
     margin-right: 3px;
 
+    padding-right: 10px;
+
     border: none;
     background: url("open_menu_image.png") no-repeat;
     background-size: 40px 40px;
     
-    width: 10%;
+    width: 40px;
     height: 40px;
 }
