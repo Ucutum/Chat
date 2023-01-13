@@ -1,23 +1,13 @@
 from flask import Flask, request, render_template, abort
+from user_base import UsersBase
+from chat_base import Chat
 import time
 import uuid
 
 app = Flask(__name__)
 
-chat = []
-
-blask_list = []
-
-admins = ["127.0.0.1"]
-user_names = {
-    "server": "Server"}
-
-
-def get_user_name(ip):
-    if ip in user_names:
-        return user_names[ip]
-    user_names[ip] = "User_" + str(uuid.uuid1())[:10]
-    return get_user_name(ip)
+users = UsersBase()
+chat = Chat(users)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -25,13 +15,14 @@ def start():
     return render_template("chat.html")
 
 
-@app.route("/message", methods=["GET_MESSAGE", "POST_MESSAGE", "DELETE", "BAN"])
+@app.route("/message", methods=["GET", "POST", "DELETE", "BAN"])
 def message():
     global chat
 
-    client_ip = request.remote_addr
+    ip = request.remote_addr
+    print(ip)
 
-    if client_ip in blask_list:
+    if users.get(ip, "black"):
         return {"chat": [{
             "user": "Server", "time": 0, "id": 0, "ip": 0,
             "type": "post", "message": "You was bunned."
@@ -40,60 +31,53 @@ def message():
     if request.method == "POST_MESSAGE":
         data = request.get_json()
         print("data", data)
-        data["user"] = "Fake server" if data["user"] == "Server" else get_user_name(client_ip)
-        data["time"] = time.perf_counter()
-        data["id"] = uuid.uuid1()
-        data["ip"] = client_ip
-        data["type"] = "post"
-        chat.append(data)
+        chat.send(ip, data.get("message", "message"), "post")
         return {}
+
     if request.method == "GET_MESSAGE":
         print("GET")
-        i = 0
-        while i < len(chat):
-            mes = chat[i]
-            mes["owner"] = mes["ip"] == client_ip
-            if time.perf_counter() - mes["time"] >= 3:
-                del chat[i]
-                i -= 1
-            i += 1
-        return {"chat": chat, "admin": client_ip in admins}
+        m = []
+        id = users.get(ip, "id")
+        for mes in chat.get(ip):
+            mes["owner"] = mes["id"] == id
+            m.append(mes)
+        return {"chat": chat, "admin": users.get(ip, "admin")}
 
-    if request.method == "DELETE":
-        if client_ip not in admins:
-            return abort(403)
-        data = request.get_json()
-        print("delete data", data)
-        data["time"] = time.perf_counter()
-        data["id"] = uuid.uuid1()
-        data["ip"] = client_ip
-        data["type"] = "delete"
-        chat.append(data)
-        return {}
-    if request.method == "BAN":
-        if client_ip not in admins:
-            return abort(403)
-        data = request.get_json()
+    # if request.method == "DELETE":
+    #     if client_ip not in admins:
+    #         return abort(403)
+    #     data = request.get_json()
+    #     print("delete data", data)
+    #     data["time"] = time.perf_counter()
+    #     data["id"] = uuid.uuid1()
+    #     data["ip"] = client_ip
+    #     data["type"] = "delete"
+    #     chat.append(data)
+    #     return {}
+    # if request.method == "BAN":
+    #     if client_ip not in admins:
+    #         return abort(403)
+    #     data = request.get_json()
 
-        if client_ip == data["ban_ip"]:
-            return abort(409)
+    #     if client_ip == data["ban_ip"]:
+    #         return abort(409)
 
-        if client_ip in blask_list:
-            return abort(400)
+    #     if client_ip in blask_list:
+    #         return abort(400)
 
-        print("bun user", data)
-        blask_list.append(data["ban_ip"])
+    #     print("bun user", data)
+    #     blask_list.append(data["ban_ip"])
 
-        print("data", data)
-        data["user"] = "Server"
-        data["message"] = f"Ip {data['ban_ip']} was banned."
-        data["time"] = time.perf_counter()
-        data["id"] = uuid.uuid1()
-        data["ip"] = client_ip
-        data["type"] = "post"
-        chat.append(data)
+    #     print("data", data)
+    #     data["user"] = "Server"
+    #     data["message"] = f"Ip {data['ban_ip']} was banned."
+    #     data["time"] = time.perf_counter()
+    #     data["id"] = uuid.uuid1()
+    #     data["ip"] = client_ip
+    #     data["type"] = "post"
+    #     chat.append(data)
 
-        return {}
+    #     return {}
 
 
 if __name__ == "__main__":

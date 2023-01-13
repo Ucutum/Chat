@@ -1,65 +1,48 @@
 import uuid
+import sqlite3
 
 
 class UsersBase:
-    def __init__(self):
-        self.users = {}
-        self.black_list = []
-        self.admin_list = []
+    def __init__(self, name="user_base.sqlite"):
+        self.con = sqlite3.connect(name, check_same_thread=False)
+        self.con.execute('''
+        CREATE TABLE IF NOT EXISTS users (
+    ip    TEXT,
+    id    TEXT,
+    name  TEXT,
+    admin BLOB,
+    dark  BLOB
+);
+''')
+        self.cur = self.con.cursor()
 
-    def random_name(self):
-        return "User_" + uuid.uuid1()[:5]
+    def get(self, ip, par=None, none=None):
+        if par is None:
+            arr = self.cur.execute('''SELECT * FROM users
+WHERE ip == ?''', (str(ip), )).fetchall()
+            if len(arr) == 0:
+                return none
+            return str(arr[0])
+        else:
+            arr = self.cur.execute('''SELECT ? FROM users
+WHERE ip == ?''', (str(par), str(ip), )).fetchall()
+            if len(arr) == 0:
+                return none
+            return str(arr[0][0])
 
-    def get(self, ip):
-        if ip in self.users:
-            return self.users[ip]
-        self.users[ip] = self.random_name()
-        return self.get(self, ip)
+    def add(self, ip, id, name, admin=False, dark=False):
+        self.cur.execute(f'''INSERT INTO users
+        VALUES (?, ?, ?, ?, ?)''', (ip, id, name, admin, dark))
+        self.con.commit()
 
-    def __item__(self, ip):
-        self.get(ip)
+    def set(self, ip, par, value):
+        self.cur.execute(f'''UPDATE users SET {str(par)} = ?
+WHERE ip == ?''', (str(ip), str(value)))
+        self.con.commit()
 
-    def set(self, ip, name=None):
-        if name is None:
-            name = self.random_name()
-        if self.in_base(name=name):
-            return
-        self.users[ip] = name
 
-    def in_base(self, ip=None, name=None):
-        if ip is not None:
-            if ip in self.users:
-                return True
-            else:
-                return False
-        if name is not None:
-            if name in self.users.values():
-                return True
-            else:
-                return False
-
-    def black_add(self, ip):
-        if ip in self.black_list:
-            return
-        self.black_list.append(ip)
-
-    def black_remove(self, ip):
-        if ip not in self.black_list:
-            return
-        self.black_list.remove(ip)
-
-    def is_black(self, ip):
-        return ip in self.black_list
-
-    def admin_add(self, ip):
-        if ip in self.admin_list:
-            return
-        self.admin_list.append(ip)
-
-    def admin_remove(self, ip):
-        if ip not in self.admin_list:
-            return
-        self.admin_list.remove(ip)
-
-    def is_admin(self, ip):
-        return ip in self.admin_list
+if __name__ == "__main__":
+    b = UsersBase()
+    # b.add("1", "111", "YOOO")
+    # b.set("1", "name", "YOOO")
+    print(b.get("1"))
