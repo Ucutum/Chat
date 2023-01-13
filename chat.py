@@ -9,6 +9,15 @@ chat = []
 blask_list = []
 
 admins = ["127.0.0.1"]
+user_names = {
+    "server": "Server"}
+
+
+def get_user_name(ip):
+    if ip in user_names:
+        return user_names[ip]
+    user_names[ip] = "User_" + str(uuid.uuid1())[:10]
+    return get_user_name(ip)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -16,7 +25,7 @@ def start():
     return render_template("chat.html")
 
 
-@app.route("/message", methods=["GET", "POST", "DELETE", "BAN"])
+@app.route("/message", methods=["GET_MESSAGE", "POST_MESSAGE", "DELETE", "BAN"])
 def message():
     global chat
 
@@ -28,17 +37,17 @@ def message():
             "type": "post", "message": "You was bunned."
             }]}
 
-    if request.method == "POST":
+    if request.method == "POST_MESSAGE":
         data = request.get_json()
         print("data", data)
-        data["user"] = "Fake server" if data["user"] == "Server" else data["user"]
+        data["user"] = "Fake server" if data["user"] == "Server" else get_user_name(client_ip)
         data["time"] = time.perf_counter()
         data["id"] = uuid.uuid1()
         data["ip"] = client_ip
         data["type"] = "post"
         chat.append(data)
         return {}
-    if request.method == "GET":
+    if request.method == "GET_MESSAGE":
         print("GET")
         i = 0
         while i < len(chat):
@@ -65,7 +74,7 @@ def message():
         if client_ip not in admins:
             return abort(403)
         data = request.get_json()
-        
+
         if client_ip == data["ban_ip"]:
             return abort(409)
 
